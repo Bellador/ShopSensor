@@ -1,0 +1,75 @@
+#map{
+    height: 100vh;
+  }
+
+ .btn-search {
+    display: block;
+    width:100%;
+    height:100px;
+}
+
+.btn-aktive {
+  color:green !important;
+}
+
+.btn-inaktive {
+  color: orange !important;
+}
+
+.nav-search-button {
+  background: none;
+  box-shadow: none;
+  border: none;
+  text-shadow: none;
+}
+
+.nav-search-button {
+  background: none;
+  box-shadow: none;
+  border: none;
+  text-shadow: none;
+}
+
+.observation-button-popup {
+  /* padding-left: 0.5vw; */ 
+}
+
+.stats-button-popup {
+  /* padding-right: 0.5vw; */
+}
+
+.legend-font {
+  font-size: 0.85rem;
+}
+
+.borderless th {
+  border: none;
+}
+
+
+.spacer {
+  margin-top: 2vh; /* define margin as you see fit */
+}
+
+.row-margin-1vh{
+  margin-top: 1vh;
+
+}
+
+.row-margin-2vh{
+  margin-top: 2vh;
+
+}
+
+.leaflet-middle {
+  top: 50%;
+  position: absolute;
+  z-index: 1000;
+  pointer-events: none;
+  transform: translate(0%, -50%);
+
+}
+
+.leaflet-center.leaflet-middle {
+  transform: translate(-50%, -50%);
+}

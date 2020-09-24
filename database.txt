@@ -1,0 +1,1 @@
+<ADD HERE - DBMS>://<ADD HERE - DB username>:<ADD HERE - DB userpsw>@<ADD HERE - host>:<ADD HERE - port>/<ADD HERE - DB name>

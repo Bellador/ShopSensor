@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ShopSensor</title>
+
+    <!-- Bootstrap Core CSS -->
+    <!-- <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Leaflet Core CSS -->
+    <!-- <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css"> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+
+    <!-- leaflet plugins CSS -->
+    <link rel="stylesheet" href="/static/plugins/leaflet-sidebar/leaflet-sidebar.min.css">
+
+    <!-- Charts Core CSS -->
+    <link rel="stylesheet" href="/static/ext/c3.min.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css" />
+
+    <script>
+        window.onload = function(){
+            $('#WelcomeModal').modal('show');
+        };
+    </script>
+    
+</head>
+<body id="page-top" class="index">
+
+            <!--Welcome modal -->
+            <div id="WelcomeModal" class="modal fade hide" role="dialog" style="position:absolute; z-index: 9001">
+                <div class="modal-dialog">
+            
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Welcome to ShopSensor</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                            <p>This tool shall help you find the most suitable shop in your area with the least busyness level at any given time to make shopping easy peasy.
+                            Help everyone by sharing your own observations about crowds and queues in front of your own favourite shops by looking for the <i class="fa fa-eye" style="color: #17a2b8"></i> symbol. Please read the project description <i class="fa fa-rocket"></i> before you launch off. There you'll find information about the limitations of this tool and the data it uses.</p>
+                            <p>Pan to your own area and search with <i class="fa fa-search btn-aktive"></i></p>
+                            <p>Enjoy your stay and share the project if you find it useful :)</p>
+                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Observation modal placeholder-->
+            <div id="ObservationModalDiv"></div>
+    
+
+            <div id="sidebar" class="sidebar collapsed">
+                <!-- Nav tabs -->
+                <div class="sidebar-tabs">
+                    <ul role="tablist">
+                        <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                        <li><a href="#project" role="tab"><i class="fa fa-rocket"></i></a></li>
+                        <li><a href="#about" role="tab"><i class="fa fa-user"></i></a></li>
+                        <li><a href="#statistics" role="tab"><i class="fa fa-line-chart"></i></a></li>
+                        <li><a href="#observations" role="tab"><i class="fa fa-eye"></i></a></li>
+                        <li><a href="#navsearch" role="tab"><button id="searchButtonNav" class="nav-search-button disabled" onclick="navBarSearch()"><i id="searchButtonNavIcon" class="fa fa-search btn-inaktive"></i></button></a></li>                            
+                    </ul>
+                </div>
+        
+                <!-- Tab panes -->
+                <div class="sidebar-content">
+                    <!-- home tab -->
+                    <div class="sidebar-pane" id="home">
+                        <h1 class="sidebar-header">
+                            ShopSensor
+                            <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                        </h1>
+                        <br>
+                        <!-- <div class="row"> 
+                            <div class="col-md-12">
+                                <button disabled="true" id="searchButton" type="button" onclick="search()" class="btn btn-success btn-search disabled" style="font-size: 3vh">
+                                        Zoom in to search
+                                </button>
+                            </div> 
+                        </div>                                           
+                        <div class="row text-center row-margin-1vh">
+                            <div class="col">You can also search by clicking the &nbsp;<i class="fa fa-search"></i> &nbsp;icon</div>
+                        </div> --> 
+                      
+                        <div style="margin-left: 1vw;">
+                            <p><i class="fa fa-arrow-circle-down" aria-hidden="true"></i>&nbsp; Choose among available regions <br> (or zoom directly to a place inside them)</p>               
+                            <a class="row text-decoration-none btn btn-primary w-55" style="align-items: center; margin-top: 1vh" href="#" onclick="zoomToPlace('Bern')" role="button">
+                                <!-- <div class="col"><img style="height:100px" src="#" class="img-thumbnail"></div> -->
+                                <div class="col"><h5>City of Bern</h5></div>
+                            </a><br>
+                            <a class="row text-decoration-none btn btn-primary w-55" style="align-items: center; margin-top: 1vh" href="#" onclick="zoomToPlace('Biel')" role="button">
+                                <!-- <div class="col"><img style="height:100px" src="#" class="img-thumbnail"></div> -->
+                                <div class="col"><h5>City of Biel/Bienne</h5></div>
+                            </a><br>
+                            <a class="row text-decoration-none btn btn-primary w-55" style="align-items: center; margin-top: 1vh" href="#" onclick="zoomToPlace('Zug')" role="button">
+                                <!-- <div class="col"><img style="height:100px" src="/static/img/cities/Zug.jpg" class="img-thumbnail"></div> -->
+                                <div class="col"><h5>Canton of Zug</h5></div>
+                            </a><br>
+                            <a class="row text-decoration-none btn btn-primary w-55" style="align-items: center; margin-top: 1vh" href="#" onclick="zoomToPlace('Zurich')" role="button">
+                                <!-- <div class="col"><img style="height:100px" src="/static/img/cities/Zuerich.jpg" class="img-thumbnail"></div> -->
+                                <div class="col"><h5>City of Zurich</h5></div>
+                            </a><br>
+                            <hr>
+
+                            <!-- Search filter checkboxes -->
+                            <p><i class="fa fa-arrow-circle-down" aria-hidden="true"></i>&nbsp; Select the shops you are interested in</p>
+
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="all_shops" checked>
+                                <label class="custom-control-label" for="all_shops">All shops</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="grocery_shops">
+                                <label class="custom-control-label" for="grocery_shops">Grocery shops</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="pharmacies">
+                                <label class="custom-control-label" for="pharmacies">Pharmacies</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="bakeries_butcheries">
+                                <label class="custom-control-label" for="bakeries_butcheries">Bakeries & Butcheries</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="take_aways">
+                                <label class="custom-control-label" for="take_aways">Take aways</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="post_offices">
+                                <label class="custom-control-label" for="post_offices">Post offices</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="public_transport_stations">
+                                <label class="custom-control-label" for="public_transport_stations">Public transport stations</label>
+                            </div>
+                                                       
+                            
+                            <hr>
+
+                            <div style="margin-top: 1vh;"><font size=2vw><strong>Hint</strong>&nbsp; search with <i class="fa fa-search" aria-hidden="true"></i> in the sidebar</div>
+                            <div style="margin-left: 1vw;">
+                                <font style="color: green">Green</font> - GO<br>
+                                <font style="color:orange">Organge</font> - Zoom in more</font>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- project description -->
+                    <div class="sidebar-pane" id="project">
+                        <h1 class="sidebar-header">Project<span class="sidebar-close"><i class="fa fa-caret-left"></i>
+                        </span></h1><br>
+                        <p>The goal of <strong>ShopSensor</strong> is to find for you the shop with the least customers to make shopping a pleasant experience and at the same time reduce the infection risk with COVID-19.</p>
+                        <p>This is achieved by using historical and in 30min intervals fetched Google maps data which holds information on the busyness levels of many shops throughout your city. Additionally, ShopSensor users can contribute their own observations about the presence of people and queues at various locations. 
+                        By comparing these busyness levels in real time ShopSensor can give you a recommendation and ranking of the shops in your area.</p>
+                        <p>It is <b>important</b> to note that this is solely a recommendation. The underlying data is only an indicator for the actual amount of customers at any given time at a specific location and must not necessarily reflect the real situation (unlike the real user observations!). 
+                        By using this tool you acknoledge this fact. Therefore, use this tool with care. This project is not funded, I make no profit off of it and I do and will not collect any personal data besides normal server logs.</p> 
+                        <p>Feel free to contact me about your personal experiences, feedback as well as improvement recommendations for this tool. Currently only a small selection of cities inside of Switzerland
+                        are covered by the data acquisition and therefore accessible in the map. If enough people request a new location I will strongly consider adding it.</p>
+                        <p>I hope this tool can help some of you if only a little - stay safe :) </p>
+                    </div>
+                    <!-- introduction to the team and credits -->
+                    <div class="sidebar-pane" id="about">
+                        <h1 class="sidebar-header">Contact<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1><br>
+                        <p>
+                            This project was created by <strong>Maximilian Hartmann</strong><br>
+                            <a href="mailto: shopsensor13@gmail.com"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+                            <a href="https://ch.linkedin.com/in/maximilian-hartmann"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+                            <a href="https://github.com/Bellador/"><i class="fa fa-github" aria-hidden="true"></i></a>
+                            <hr>
+                            Special thanks for their active support during the development go to: <br><br>
+                            My friend <strong>Manuel Baer</strong> (Frontend)
+                            <a href="https://www.spatialsparks.com/"  title="personal website"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>
+                            <a href="https://twitter.com/spatialsparks"><i class="fa fa-twitter-square" aria-hidden="true"></i></a><br>
+                            My dad <strong>Peter Hartmann</strong> (Backend)
+                            <hr>
+                            Credits
+                            <ul>
+                                <li>Graphs powered by <a href="https://d3js.org/">D3.js library</a></li>
+                                <li>Icons by <a href="https://fontawesome.com">Font Awesome 4</a></li>
+                                <li>Navbar by <a href="https://github.com/noerw/leaflet-sidebar-v2">@noerw</a></li>
+                            </ul>
+                        </p>
+                    </div>
+                    <!-- statistics tab-->
+                    <div class="sidebar-pane" id="statistics">
+                        <h1 class="sidebar-header">Statistics<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                        <div class="spacer"></div>
+                        
+                        <div id="queryReturn" class="container-fluid invisible">
+                            <div class="row">Your search returned</div>
+                            <div class="row">
+                                <div class="col-2"><strong id="placeCount"></strong></div>
+                                <div class="col-10">places</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-2"><strong id="sensorCount"></strong></div>
+                                <div class="col-10">sensors</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-2"><strong id="observationCount"></strong></div>
+                                <div class="col-10">observations</div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <table class="table borderless">
+                                    <thead>
+                                        <tr>
+                                        <th scope="col">Icon</th>
+                                        <th scope="col">Rank</th>
+                                        <th scope="col">Place</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row"><img style="height:3vh;" src="/static/img/marker-icon-2x-green.png" class="img-thumbnail"></th>
+                                            <td><b class="legend-font">1</b></td>
+                                            <td><div id="rankOne" class="legend-font"></div></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><img style="height:3vh;" src="/static/img/marker-icon-2x-blue.png" class="img-thumbnail"></th>
+                                            <td><b class="legend-font">2</b></td>
+                                            <td><div id="rankTwo" class="legend-font"></div></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><img style="height:3vh;" src="/static/img/marker-icon-2x-red.png" class="img-thumbnail"></th>
+                                            <td><b class="legend-font">3</b></td>
+                                            <td><div id="rankThree" class="legend-font"></div></td>             
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><img style="height:3vh;" src="/static/img/marker-icon-2x-gold.png" class="img-thumbnail"></th>
+                                            <td colspan="2"><div class="col-10 legend-font">Has sensor or observation data</div></td>            
+                                        </tr>
+                                        <tr>
+                                            <th scope="row"><img style="height:3vh;" src="/static/img/marker-icon-2x-grey.png" class="img-thumbnail"></th>
+                                            <td colspan="2"><div class="col-10 legend-font">No data, add observations</div></td>            
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                      
+                            
+                            <hr>
+                            <div class="row">
+                                <div id="lineChartPlace" class="col"></div>
+                            </div>
+                            <div class="row">
+                                <div id="lineChart" class="col"></div>
+                            </div>
+                            <!-- <p class="text-center" style="font-size: small; margin-top: 1vh;"><b>The graph is interactable, try it out :)</b></p> -->
+                        </div>   
+                    </div>
+                    <!-- User observations tab-->
+                    <div class="sidebar-pane" id="observations">
+                        <h1 class="sidebar-header">Observations<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                        <p style="margin-top: 1vh;"><b>We need your help</b></p>
+                        <P>Did you just go shopping? Select the shop on the map and tell us how many people you think there are and if there is a queue. This helps us and everyone else using ShopSensor. It's all completely anonymous!</p>
+                        <p>It takes less than a minute <i class="fa fa-heart-o" aria-hidden="true"></i></p>
+
+                        <div id="successSubmitObservation" class="container-fluid invisible">
+                            <hr>
+                            <div class="row text-center align-items-center row-margin-2vh">
+                                <div class="col"><i class="fa fa-trophy fa-4x" style="color: #1e9f75;" aria-hidden="true"></i></div>
+                            </div>
+                            <div class="row text-center align-items-center row-margin-1vh">
+                                <div class="col"><strong>Success! Thank you for your help</strong></div>
+                            </div>
+                        </div>
+                        <div id="failSubmitObservation" class="container-fluid invisible">
+                            <hr>
+                            <div class="row text-center align-items-center row-margin-2vh">
+                                <div class="col"><i class="fa fa-info-circle fa-4x" style="color: #fcb603;" aria-hidden="true"></i></div>
+                            </div>
+                            <div class="row text-center align-items-center row-margin-1vh">
+                                <div class="col">I like your enthusiasm but please wait another <strong id="timeToWait"></strong> minute(s) till your next observation</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+    <!-- MAP -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="map" class="sidebar-map">
+                    <div id="loadingSpinner" class="spinner-border text-warning invisible" style="position:absolute; left: 45vw; top: 20vh; z-index: 9000; width: 5rem; height: 5rem;" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>       
+    </div>
+
+
+    <!-- LOAD JS -->
+    <!-- <script src="/static/vendor/jquery/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <!-- <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- <script src="/static/vendor/leaflet/leaflet.js"></script> -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="/static/plugins/leaflet-sidebar/leaflet-sidebar.min.js"></script>
+    <script src="/static/ext/d3.v3.min.js"></script>
+    <script src="/static/ext/c3.min.js"></script>
+    <script src="/static/js/mapV5.js"></script>
+    <script src="/static/js/search.js"></script>
+    <script src="/static/js/linechart.js"></script>
+    <script src="/static/js/observation.js"></script>
+    <script>
+        // Create CSRF Token
+        var csrf_token = "{{ csrf_token() }}";
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+        // uncheck all_shoptypes checkbox if anything else is selected
+        $(".custom-control-input").change(function() {
+            let shopType = $(this).attr('id')
+            if (shopType != 'all_shops') {
+                if(this.checked) {
+                    $("#all_shops").prop("checked", false);
+                }
+            }
+        });
+    </script>
+</body>
+
+
